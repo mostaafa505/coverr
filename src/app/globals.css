@@ -1,0 +1,85 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&family=Cairo:wght@500;600;700&display=swap');
+
+:root {
+  --background: #F4F2ED;
+  --foreground: #141413;
+  --paper-card: #FBFBF9;
+  --border-rule: #D4D1C7;
+  --ink-primary: #141413;
+  --ink-secondary: #4F4D46;
+  --ink-muted: #827F75;
+  --cutter-red: #C22915;
+  --blueprint-blue: #1D4ED8;
+  --safety-green: #15803D;
+}
+
+body {
+  color: var(--foreground);
+  background: var(--background);
+  font-family: 'IBM Plex Sans Arabic', 'Cairo', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Numeric technical displays */
+.font-mono-num {
+  font-family: 'IBM Plex Mono', monospace;
+  font-feature-settings: 'tnum' on, 'lnum' on;
+}
+
+/* Precision workshop cutting mat grid */
+.workshop-mat-grid {
+  background-color: #ECE9E1;
+  background-image: 
+    linear-gradient(to right, rgba(0, 0, 0, 0.06) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(0, 0, 0, 0.06) 1px, transparent 1px),
+    linear-gradient(to right, rgba(0, 0, 0, 0.12) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(0, 0, 0, 0.12) 1px, transparent 1px);
+  background-size: 10px 10px, 10px 10px, 50px 50px, 50px 50px;
+}
+
+/* Red hazard stripe pattern for camera & cutout collision */
+.hatch-warning {
+  background: repeating-linear-gradient(
+    45deg,
+    rgba(194, 41, 21, 0.22),
+    rgba(194, 41, 21, 0.22) 6px,
+    rgba(194, 41, 21, 0.45) 6px,
+    rgba(194, 41, 21, 0.45) 12px
+  );
+}
+
+/* Hairline technical ruler ticks */
+.ruler-tick-1mm {
+  width: 1px;
+  background-color: #A3A096;
+}
+
+.ruler-tick-5mm {
+  width: 1px;
+  background-color: #6E6B62;
+}
+
+.ruler-tick-10mm {
+  width: 1.5px;
+  background-color: #141413;
+}
+
+/* Clean workshop scrollbar */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+::-webkit-scrollbar-track {
+  background: #ECE9E1;
+}
+::-webkit-scrollbar-thumb {
+  background: #C4C1B6;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #969389;
+}
