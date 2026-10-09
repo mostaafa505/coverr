@@ -1,36 +1,25 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: [
-    "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
-    "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
-    "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
-  ],
+  content: ['./src/**/*.{js,ts,jsx,tsx,mdx}'],
   theme: {
     extend: {
       colors: {
-        background: "var(--background)",
-        foreground: "var(--foreground)",
-        brand: {
-          50: "#f0f9ff",
-          100: "#e0f2fe",
-          500: "#0284c7",
-          600: "#0369a1",
-          700: "#075985",
-        },
-        print: {
-          cyan: "#00a8e8",
-          magenta: "#ec008c",
-          yellow: "#ffea00",
-          key: "#212529",
-          bleed: "#ef4444",
-          safe: "#10b981",
-          cut: "#f59e0b",
-        }
+        paper: '#F4F1EA',
+        sunken: '#ECE8DE',
+        line: '#DDD7C9',
+        ink: { DEFAULT: '#1D1B17', 2: '#55514A', 3: '#8A857A' },
+        accent: { DEFAULT: '#D6451F', hover: '#B83A19', soft: '#FBE9E2' },
+        good: '#2E7D4F',
+        warn: '#B7791F',
+        bad: '#C0392B',
       },
       fontFamily: {
-        cairo: ["var(--font-cairo)", "sans-serif"],
-        tajawal: ["var(--font-tajawal)", "sans-serif"],
-      }
+        sans: ['"IBM Plex Sans Arabic"', 'system-ui', '-apple-system', 'Segoe UI', 'Roboto', 'sans-serif'],
+      },
+      boxShadow: {
+        sheet: '0 -8px 30px rgba(29,27,23,.14)',
+        pop: '0 10px 40px rgba(29,27,23,.18)',
+      },
     },
   },
   plugins: [],

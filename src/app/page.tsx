@@ -1,7 +1,5 @@
-'use client';
-
-import PrintStudio from '@/components/studio/PrintStudio';
+import Studio from '@/components/studio/Studio';
 
 export default function HomePage() {
-  return <PrintStudio />;
+  return <Studio />;
 }

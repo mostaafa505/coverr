@@ -1,3 +1,5 @@
+// ───────── الكتالوج (مقاسات الموديلات بالملّيمتر) ─────────
+
 export type OSType = 'android' | 'ios';
 
 export interface Brand {
@@ -5,196 +7,148 @@ export interface Brand {
   name: string;
   nameAr: string;
   os: OSType;
-  logo?: string;
-  active: boolean;
+  active?: boolean;
 }
 
-export type CutoutType = 'camera' | 'fingerprint' | 'flash' | 'logo-window' | 'speaker' | 'sensor';
-export type CutoutShape = 'rect' | 'circle' | 'rounded-rect' | 'path';
+export type CutoutType = 'camera' | 'fingerprint' | 'flash' | 'sensor' | 'logo-window' | 'speaker';
+export type CutoutShape = 'rect' | 'circle' | 'rounded-rect';
 
 export interface Cutout {
   id: string;
   name: string;
-  nameAr?: string;
   type: CutoutType;
   shape: CutoutShape;
-  xMm: number;        // X coordinate from top-left of cutline in mm
-  yMm: number;        // Y coordinate from top-left of cutline in mm
-  widthMm: number;    // Width in mm
-  heightMm: number;   // Height in mm
-  radiusMm?: number;  // Corner radius (or circle radius) in mm
-  svgPath?: string;   // Optional SVG path data for custom curved outlines
+  /** المسافة من الحافة اليسرى لخط القص */
+  xMm: number;
+  /** المسافة من الحافة العلوية لخط القص */
+  yMm: number;
+  widthMm: number;
+  heightMm: number;
+  radiusMm?: number;
 }
 
 export interface PrintTemplate {
-  widthMm: number;        // Total print area width in mm (including bleed or base)
-  heightMm: number;       // Total print area height in mm (including bleed or base)
-  cornerRadiusMm: number; // Case outer corner radius in mm
-  bleedMm: number;        // Bleed margin in mm (default 3mm)
-  safeMarginMm: number;   // Safe margin inside cutline in mm (default 3mm)
-  cutouts: Cutout[];      // Array of cutout zones
-  supplierCode?: string;  // Optional supplier/factory die-line SKU
-  version?: number;
-  lastUpdated?: string;
+  widthMm: number;
+  heightMm: number;
+  cornerRadiusMm: number;
+  bleedMm: number;
+  safeMarginMm: number;
+  cutouts: Cutout[];
 }
-
-export type ModelStatus = 'active' | 'needs_template' | 'disabled';
 
 export interface DeviceModel {
   id: string;
   brandId: string;
   name: string;
   releaseYear: number;
-  aliases: string[];      // e.g. ["2312DRA50C", "Redmi Note 13 4G"]
-  status: ModelStatus;    // If not 'active' or template is null, hidden from public users
-  template?: PrintTemplate | null;
-  notes?: string;
-  createdAt: string;
-  updatedAt: string;
+  aliases: string[];
+  template: PrintTemplate;
 }
 
-// Canvas Design Elements
-export type ElementType = 'image' | 'text' | 'shape';
+export interface Catalog {
+  brands: Brand[];
+  models: DeviceModel[];
+}
+
+// ───────── التصميم (كل الأبعاد بالملّيمتر، نقطة الأصل = الركن العلوي الأيسر لخط القص) ─────────
+
+export type ElementKind = 'image' | 'text' | 'shape';
 
 export interface BaseElement {
   id: string;
-  type: ElementType;
-  x: number;          // Position relative to canvas (px or mm)
+  kind: ElementKind;
+  /** مركز العنصر */
+  x: number;
   y: number;
-  rotation: number;   // in degrees
-  scaleX: number;
-  scaleY: number;
+  rotation: number;
   opacity: number;
-  zIndex: number;
   locked?: boolean;
+  hidden?: boolean;
+}
+
+export interface ImageAdjust {
+  brightness: number; // -100 .. 100
+  contrast: number; // -100 .. 100
+  saturation: number; // -100 .. 100
+  grayscale: boolean;
+  sepia: number; // 0 .. 100
 }
 
 export interface ImageElement extends BaseElement {
-  type: 'image';
-  src: string;        // Data URL or remote URL
-  originalWidth: number;   // Natural pixels width
-  originalHeight: number;  // Natural pixels height
-  currentDpi: number;      // Calculated DPI based on covered physical mm
-  filters?: {
-    brightness?: number;
-    contrast?: number;
-    grayscale?: boolean;
-    sepia?: boolean;
-    saturation?: number;
-    blur?: number;
-    flipX?: boolean;
-    flipY?: boolean;
-  };
+  kind: 'image';
+  /** رابط blob محلي */
+  src: string;
+  /** أبعاد الصورة الأصلية بالبكسل */
+  nw: number;
+  nh: number;
+  /** الجزء الظاهر من الصورة (كنسبة من 0 إلى 1) */
+  crop: { x: number; y: number; w: number; h: number };
+  w: number;
+  h: number;
+  flipX: boolean;
+  flipY: boolean;
+  adjust: ImageAdjust;
+  name?: string;
 }
 
 export interface TextElement extends BaseElement {
-  type: 'text';
+  kind: 'text';
   text: string;
   fontFamily: string;
+  /** ارتفاع الخط بالملّيمتر */
   fontSize: number;
   fill: string;
+  bold: boolean;
+  italic: boolean;
   align: 'left' | 'center' | 'right';
-  bold?: boolean;
-  italic?: boolean;
-  stroke?: string;
-  strokeWidth?: number;
+  stroke: string;
+  /** سُمك الإطار بالملّيمتر (0 = بدون) */
+  strokeWidth: number;
+  lineHeight: number;
 }
+
+export type ShapeKind = 'rect' | 'ellipse' | 'triangle' | 'heart' | 'star';
 
 export interface ShapeElement extends BaseElement {
-  type: 'shape';
-  shapeType: 'rect' | 'circle' | 'star' | 'heart';
-  width: number;
-  height: number;
+  kind: 'shape';
+  shape: ShapeKind;
+  w: number;
+  h: number;
   fill: string;
-  stroke?: string;
-  strokeWidth?: number;
+  stroke: string;
+  strokeWidth: number;
+  radius: number;
 }
 
-export type CanvasElement = ImageElement | TextElement | ShapeElement;
+export type DesignElement = ImageElement | TextElement | ShapeElement;
 
-export interface DesignData {
-  canvasWidthPx: number;
-  canvasHeightPx: number;
-  pxPerMm: number;
-  elements: CanvasElement[];
-  backgroundColor?: string;
+export type Background =
+  | { type: 'solid'; color: string }
+  | { type: 'gradient'; from: string; to: string; angle: number }
+  | { type: 'transparent' };
+
+export interface Design {
+  elements: DesignElement[];
+  background: Background;
 }
 
-// Preflight Check Results
-export interface PreflightIssue {
-  severity: 'error' | 'warning' | 'info';
-  code: 'LOW_DPI' | 'CUTOUT_COLLISION' | 'BLEED_INCOMPLETE' | 'OUTSIDE_SAFE_ZONE' | 'DIMENSION_MISMATCH';
-  title: string;
-  titleAr: string;
-  description: string;
-  descriptionAr: string;
-  elementId?: string;
-  details?: Record<string, any>;
-}
-
-export interface PreflightReport {
-  passed: boolean;
-  canExport: boolean;
-  dpiCheck: {
-    minDpiFound: number;
-    targetDpi: number;
-    status: 'ok' | 'warning' | 'fail';
-  };
-  bleedCheck: {
-    hasBleed: boolean;
-    bleedMm: number;
-    status: 'ok' | 'fail';
-  };
-  collisionCheck: {
-    hasCollisions: boolean;
-    collidingElementsCount: number;
-  };
-  issues: PreflightIssue[];
-}
+// ───────── خيارات التصدير ─────────
 
 export type PrintTechnology = 'sublimation' | 'uv' | 'dtf';
-export type CaseType = '2d_flat' | '3d_wrap' | 'tpu_clear' | 'hard_pc';
+export type CaseType = 'flat' | 'wrap3d';
 
-export interface PrintOptions {
-  technology: PrintTechnology;             // 'sublimation' | 'uv' | 'dtf'
-  caseType: CaseType;                     // '2d_flat' | '3d_wrap' | 'tpu_clear' | 'hard_pc'
-  mirrorForSublimation?: boolean;         // Mirror flip horizontally
-  generateWhiteUnderbase?: boolean;       // Generate spot white layer for UV
-  sublimationHeatCompensation?: boolean;  // Pre-compensate for heat darkening
-  registrationMarks?: boolean;            // 4 optical registration marks for cutters
-  includeBleedSlugText?: boolean;         // Tiny order id printed in bleed
-  includeDieLineOverlay?: boolean;        // Whether to draw cut die-line directly on production PDF
-}
-
-export interface Order {
-  id: string;
-  orderNumber: string;
-  customerName: string;
-  customerPhone: string;
-  customerCity?: string;
-  customerNotes?: string;
-  modelId: string;
-  modelName: string;
-  brandName: string;
-  previewUrl: string;             // Low-res mockup preview
-  printPdfUrl?: string;           // Production PDF (Clean or with die-line according to options)
-  proofPdfUrl?: string;           // Inspection PDF with die-line overlay & safe guides
-  printPngUrl?: string;           // High-res 300 DPI PNG
-  cutSvgUrl?: string;             // Vector die-line cut path
-  whiteUnderbasePngUrl?: string;  // Spot white mask for UV printers
-  technology?: PrintTechnology;
-  caseType?: CaseType;
-  designData: DesignData;
-  preflightReport: PreflightReport;
-  status: 'pending' | 'processing' | 'printed' | 'shipped' | 'cancelled';
-  createdAt: string;
-}
-
-export interface GangSheetItem {
-  orderId: string;
-  modelName: string;
-  pngBuffer: Buffer | string;     // file path or buffer
-  widthMm: number;
-  heightMm: number;
-  label: string;
+export interface ExportOptions {
+  technology: PrintTechnology;
+  caseType: CaseType;
+  /** قلب الصورة أفقيًا (ورق السبلميشن) */
+  mirror: boolean;
+  /** خط القص كلون خاص CutContour داخل الـ PDF */
+  cutLineInPdf: boolean;
+  /** علامات تسجيل لماكينات القص الضوئية */
+  registrationMarks: boolean;
+  /** طبقة حبر أبيض (UV) كملف منفصل */
+  whiteInk: boolean;
+  /** JPEG بجودة عالية بدل الضغط بدون فقد */
+  smallFile: boolean;
+  jobName: string;
 }

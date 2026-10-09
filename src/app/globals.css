@@ -1,85 +1,210 @@
+@import '@fontsource/ibm-plex-sans-arabic/400.css';
+@import '@fontsource/ibm-plex-sans-arabic/500.css';
+@import '@fontsource/ibm-plex-sans-arabic/600.css';
+@import '@fontsource/ibm-plex-sans-arabic/700.css';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&family=Cairo:wght@500;600;700&display=swap');
-
 :root {
-  --background: #F4F2ED;
-  --foreground: #141413;
-  --paper-card: #FBFBF9;
-  --border-rule: #D4D1C7;
-  --ink-primary: #141413;
-  --ink-secondary: #4F4D46;
-  --ink-muted: #827F75;
-  --cutter-red: #C22915;
-  --blueprint-blue: #1D4ED8;
-  --safety-green: #15803D;
+  color-scheme: light;
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
 }
 
+html,
 body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: 'IBM Plex Sans Arabic', 'Cairo', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  height: 100%;
+  background: #f4f1ea;
+  color: #1d1b17;
+  font-family:
+    'IBM Plex Sans Arabic',
+    system-ui,
+    -apple-system,
+    'Segoe UI',
+    Roboto,
+    sans-serif;
   -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  -webkit-text-size-adjust: 100%;
+  -webkit-tap-highlight-color: transparent;
+  overscroll-behavior: none;
 }
 
-/* Numeric technical displays */
-.font-mono-num {
-  font-family: 'IBM Plex Mono', monospace;
-  font-feature-settings: 'tnum' on, 'lnum' on;
+/* متصفحات قديمة بدون dvh */
+.h-dvh {
+  height: 100vh;
+  height: 100dvh;
 }
 
-/* Precision workshop cutting mat grid */
-.workshop-mat-grid {
-  background-color: #ECE9E1;
-  background-image: 
-    linear-gradient(to right, rgba(0, 0, 0, 0.06) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(0, 0, 0, 0.06) 1px, transparent 1px),
-    linear-gradient(to right, rgba(0, 0, 0, 0.12) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(0, 0, 0, 0.12) 1px, transparent 1px);
-  background-size: 10px 10px, 10px 10px, 50px 50px, 50px 50px;
+/* iOS بيكبّر الصفحة لو الخط في الحقل أصغر من 16px */
+@media (pointer: coarse) {
+  .field,
+  input,
+  textarea,
+  select {
+    font-size: 16px !important;
+  }
 }
 
-/* Red hazard stripe pattern for camera & cutout collision */
-.hatch-warning {
-  background: repeating-linear-gradient(
-    45deg,
-    rgba(194, 41, 21, 0.22),
-    rgba(194, 41, 21, 0.22) 6px,
-    rgba(194, 41, 21, 0.45) 6px,
-    rgba(194, 41, 21, 0.45) 12px
-  );
+button,
+input,
+select,
+textarea {
+  font: inherit;
+  color: inherit;
 }
 
-/* Hairline technical ruler ticks */
-.ruler-tick-1mm {
-  width: 1px;
-  background-color: #A3A096;
+button {
+  cursor: pointer;
+  touch-action: manipulation;
 }
 
-.ruler-tick-5mm {
-  width: 1px;
-  background-color: #6E6B62;
+:focus-visible {
+  outline: 2px solid #d6451f;
+  outline-offset: 2px;
 }
 
-.ruler-tick-10mm {
-  width: 1.5px;
-  background-color: #141413;
+/* شريط تمرير هادئ */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #c9c2b2 transparent;
 }
-
-/* Clean workshop scrollbar */
 ::-webkit-scrollbar {
-  width: 5px;
-  height: 5px;
-}
-::-webkit-scrollbar-track {
-  background: #ECE9E1;
+  width: 8px;
+  height: 8px;
 }
 ::-webkit-scrollbar-thumb {
-  background: #C4C1B6;
+  background: #c9c2b2;
+  border-radius: 8px;
 }
-::-webkit-scrollbar-thumb:hover {
-  background: #969389;
+
+.num {
+  font-variant-numeric: tabular-nums lining-nums;
+  direction: ltr;
+  unicode-bidi: isolate;
+  display: inline-block;
+}
+
+/* مدخلات */
+.field {
+  @apply w-full rounded-lg border border-line bg-white px-3 py-2 text-sm text-ink placeholder:text-ink-3;
+  min-height: 40px;
+}
+.field:focus {
+  @apply border-ink outline-none;
+}
+
+/* زرار */
+.btn {
+  @apply inline-flex items-center justify-center gap-2 rounded-lg border border-line bg-white px-3.5 text-sm font-medium text-ink transition-colors;
+  min-height: 40px;
+}
+.btn:hover {
+  @apply bg-sunken;
+}
+.btn:disabled {
+  @apply cursor-not-allowed opacity-40;
+}
+.btn-primary {
+  @apply border-accent bg-accent text-white;
+}
+.btn-primary:hover {
+  @apply border-accent-hover bg-accent-hover;
+}
+.btn-ghost {
+  @apply border-transparent bg-transparent;
+}
+
+.label {
+  @apply mb-1.5 block text-xs font-semibold text-ink-2;
+}
+
+/* range */
+input[type='range'] {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 28px;
+  background: transparent;
+}
+input[type='range']::-webkit-slider-runnable-track {
+  height: 4px;
+  border-radius: 4px;
+  background: #d8d2c3;
+}
+input[type='range']::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  height: 22px;
+  width: 22px;
+  margin-top: -9px;
+  border-radius: 50%;
+  background: #1d1b17;
+  border: 3px solid #fff;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+}
+input[type='range']::-moz-range-track {
+  height: 4px;
+  border-radius: 4px;
+  background: #d8d2c3;
+}
+input[type='range']::-moz-range-thumb {
+  height: 18px;
+  width: 18px;
+  border-radius: 50%;
+  background: #1d1b17;
+  border: 3px solid #fff;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+}
+
+input[type='color'] {
+  -webkit-appearance: none;
+  appearance: none;
+  border: 0;
+  padding: 0;
+  background: none;
+  cursor: pointer;
+}
+input[type='color']::-webkit-color-swatch-wrapper {
+  padding: 0;
+}
+input[type='color']::-webkit-color-swatch {
+  border: 1px solid #ddd7c9;
+  border-radius: 8px;
+}
+input[type='color']::-moz-color-swatch {
+  border: 1px solid #ddd7c9;
+  border-radius: 8px;
+}
+
+.checker {
+  background-color: #fff;
+  background-image:
+    linear-gradient(45deg, #e6e1d4 25%, transparent 25%, transparent 75%, #e6e1d4 75%),
+    linear-gradient(45deg, #e6e1d4 25%, transparent 25%, transparent 75%, #e6e1d4 75%);
+  background-size: 14px 14px;
+  background-position:
+    0 0,
+    7px 7px;
+}
+
+@keyframes sheet-in {
+  from {
+    transform: translateY(24px);
+    opacity: 0;
+  }
+  to {
+    transform: none;
+    opacity: 1;
+  }
+}
+.sheet-in {
+  animation: sheet-in 0.18s ease-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+    transition: none !important;
+  }
 }
