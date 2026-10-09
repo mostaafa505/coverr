@@ -1,18 +1,14 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  serverExternalPackages: ['sharp', 'pdf-lib'],
-  experimental: {
-    serverActions: {
-      bodySizeLimit: '50mb',
-    },
-  },
-  images: {
-    remotePatterns: [
+  reactStrictMode: true,
+  poweredByHeader: false,
+  async headers() {
+    return [
       {
-        protocol: 'https',
-        hostname: '**',
+        source: '/catalog.json',
+        headers: [{ key: 'Cache-Control', value: 'public, max-age=3600, stale-while-revalidate=86400' }],
       },
-    ],
+    ];
   },
 };
 

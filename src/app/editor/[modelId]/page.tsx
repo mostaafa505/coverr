@@ -1,10 +1,6 @@
-import PrintStudio from '@/components/studio/PrintStudio';
+import Studio from '@/components/studio/Studio';
 
-export default async function EditorPage({
-  params,
-}: {
-  params: Promise<{ modelId: string }>;
-}) {
+export default async function EditorPage({ params }: { params: Promise<{ modelId: string }> }) {
   const { modelId } = await params;
-  return <PrintStudio initialModelId={modelId} />;
+  return <Studio initialModelId={decodeURIComponent(modelId)} />;
 }
